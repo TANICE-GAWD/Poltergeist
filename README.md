@@ -1,7 +1,8 @@
 Poltergeist is a evil spirit from German Folk lore in which it had invisible hands and it used it to control/destroy objects
 
 this project is named so as i am trying to make it so that i can use my OnePlus Ear buds to control my laptop
-yup i will using the touch pad that is on the side of the bud and try to manipulate it's network packet in order to link them to my linux machines either gyroscope/screen
+
+yup i will be using the touch pad that is on the side of the bud and try to manipulate it's network packet in order to link them to my linux machines either gyroscope/screen
 
 what i have tried till now : 
 steps
