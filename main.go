@@ -108,18 +108,25 @@ func doHandshake(fd int) {
 //  Byte  12   = GESTURE (0x02=double tap, 0x03=triple tap, 0x04=long press)
 
 func handleNotify(data []byte) {
-    fmt.Println("[RX RAW]", hexStr(data))
+	fmt.Println("[RX RAW]", hexStr(data))
 
-    for i := 0; i < len(data)-5; i++ {
-        if data[i] != 0xAA { continue }
+	for i := 0; i < len(data)-12; i++ {
+		if data[i] != 0xAA {
+			continue
+		}
 
-        cat, sub := data[i+4], data[i+5]
+		frameLen := int(data[i+1])
+		if i+frameLen+2 > len(data) {
+			break
+		}
 
-        switch {
-        // Gesture
-        case cat == 0x04 && sub == 0x02 && data[i+9] == 0xF1:
-            side := "LEFT"
-			if data[i+10] == 0x02 { 
+		cat, sub := data[i+4], data[i+5]
+
+		switch {
+		// Gesture
+		case cat == 0x04 && sub == 0x02 && data[i+9] == 0xF1:
+			side := "LEFT"
+			if data[i+10] == 0x02 {
 				side = "RIGHT"
 			}
 			names := map[byte]string{
@@ -127,8 +134,8 @@ func handleNotify(data []byte) {
 				0x03: "TRIPLE TAP",
 				0x04: "LONG PRESS",
 			}
-            gesture := data[i+12]
-            name, ok := names[gesture]
+			gesture := data[i+12]
+			name, ok := names[gesture]
 			if !ok {
 				name = fmt.Sprintf("UNKNOWN(0x%02X)", gesture)
 			}
@@ -138,14 +145,19 @@ func handleNotify(data []byte) {
 			fmt.Printf("╚══════════════════════════════╝\n")
 
 			handleGesture(side, gesture)
-        // Battery
-        case cat == 0x06 && sub == 0x81:
+
+		// Battery
+		case cat == 0x06 && sub == 0x81:
+			if i+15 >= len(data) {
+				break
+			}
 			fmt.Printf("[PROTO] CAT=0x%02X SUB=0x%02X LEN=%d\n", cat, sub, len(data))
-            fmt.Printf("\n[BATTERY] L:%d%% R:%d%% C:%d%%\n", 
-                data[i+12], data[i+14], data[i+15])
-        }
-        i += int(data[i+1]) + 3 
-    }
+			fmt.Printf("\n[BATTERY] L:%d%% R:%d%% C:%d%%\n",
+				data[i+12], data[i+14], data[i+15])
+		}
+
+		i += frameLen + 3
+	}
 }
 
 func handleGesture(side string, gesture byte) {
