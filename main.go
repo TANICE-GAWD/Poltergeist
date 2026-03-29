@@ -228,3 +228,99 @@ func cmdDisconnect() {
 }
 
 
+
+
+func printHelp() {
+	fmt.Println(`
+OnePlus Nord Buds 3 — Gesture Remote Controller
+
+Usage:
+  go run main.go <command>
+
+Commands:
+  listen    	Connect and listen for tap gestures (main mode)
+  on        	Enable ANC (Active Noise Cancellation)
+  off       	Disable ANC
+  trans     	Enable Transparency mode
+  battery   	Query battery levels
+  connect	Connect the earbuds
+  disconnect	Disconnect the earbuds
+
+Gesture map:
+  Left  double tap   →  Left mouse click
+  Right double tap   →  Right mouse click
+  Left  triple tap   →  Scroll up
+  Right triple tap   →  Scroll down
+  Left  long press   →  Play / Pause
+  Right long press   →  Next track
+`)
+}
+
+func main() {
+	if len(os.Args) < 2 {
+		printHelp()
+		return
+	}
+	cmd := strings.ToLower(os.Args[1])
+
+	if cmd == "help" || cmd == "--help" || cmd == "-h" {
+		printHelp()
+		return
+	}
+
+	fmt.Printf("[*] Connecting to %s via RFCOMM channel %d...\n", DEVICE_MAC, RFCOMM_CHAN)
+	fd, err := connectRFCOMM()
+	if err != nil {
+		fmt.Println("[ERROR]", err)
+		fmt.Println("[HINT]  Make sure the buds are connected: bluetoothctl connect", DEVICE_MAC)
+		return
+	}
+	defer syscall.Close(fd)
+	fmt.Println("[OK] RFCOMM connected")
+
+	go readLoop(fd)
+	time.Sleep(300 * time.Millisecond)
+
+	switch cmd {
+
+	case "listen":
+		fmt.Println("[*] Performing handshake...")
+		doHandshake(fd)
+		fmt.Println()
+		fmt.Println("╔══════════════════════════════════════╗")
+		fmt.Println("║     Nord Buds Gesture Remote READY   ║")
+		fmt.Println("╠══════════════════════════════════════╣")
+		fmt.Println("║  L double tap  →  Left click         ║")
+		fmt.Println("║  R double tap  →  Right click        ║")
+		fmt.Println("║  L triple tap  →  Scroll up          ║")
+		fmt.Println("║  R triple tap  →  Scroll down        ║")
+		fmt.Println("║  L long press  →  Play / Pause       ║")
+		fmt.Println("║  R long press  →  Next track         ║")
+		fmt.Println("╚══════════════════════════════════════╝")
+		fmt.Println()
+		select {} 
+
+	case "on":
+		cmdANC(fd, 0x01, "ANC ON")
+
+	case "off":
+		cmdANC(fd, 0x04, "ANC OFF")
+
+	case "trans":
+		cmdANC(fd, 0x02, "TRANSPARENCY")
+
+	case "battery":
+		cmdBattery(fd)
+	case "connect":
+		cmdConnect()
+		return
+
+	case "disconnect":
+		cmdDisconnect()
+		return
+
+	default:
+		fmt.Printf("[ERROR] Unknown command: %s\n", cmd)
+		printHelp()
+	}
+}

@@ -1,0 +1,41 @@
+[SYS] Disconnecting audio...
+[INFO] Keeping existing connection (no forced disconnect)
+[*] Scanning for Nord Buds...
+[FOUND] OnePlus Nord Buds 3
+[OK] Connected
+[WAIT] Stabilizing connection...
+[SERVICE] 00001800-0000-1000-8000-00805f9b34fb
+  [CHAR] 00002a00-0000-1000-8000-00805f9b34fb
+  [CHAR] 00002a01-0000-1000-8000-00805f9b34fb
+  [CHAR] 00002aa6-0000-1000-8000-00805f9b34fb
+  [CHAR] 00002bf5-0000-1000-8000-00805f9b34fb
+  [CHAR] 00002a04-0000-1000-8000-00805f9b34fb
+[SERVICE] 00001801-0000-1000-8000-00805f9b34fb
+  [CHAR] 00002a05-0000-1000-8000-00805f9b34fb
+    -> subscribed to notifications
+  [CHAR] 00002b29-0000-1000-8000-00805f9b34fb
+  [CHAR] 00002b3a-0000-1000-8000-00805f9b34fb
+  [CHAR] 00002b2a-0000-1000-8000-00805f9b34fb
+[SERVICE] 0000fe2c-0000-1000-8000-00805f9b34fb
+  [CHAR] fe2c1233-8366-4814-8eb0-01de32100bea
+  [CHAR] fe2c1234-8366-4814-8eb0-01de32100bea
+    -> subscribed to notifications
+  [CHAR] fe2c1235-8366-4814-8eb0-01de32100bea
+    -> subscribed to notifications
+  [CHAR] fe2c1236-8366-4814-8eb0-01de32100bea
+  [CHAR] fe2c1237-8366-4814-8eb0-01de32100bea
+    -> subscribed to notifications
+  [CHAR] fe2c123a-8366-4814-8eb0-01de32100bea
+    -> subscribed to notifications
+  [CHAR] fe2c1239-8366-4814-8eb0-01de32100bea
+[SERVICE] 66666666-6666-6666-6666-666666666666
+  [CHAR] 77777777-7777-7777-7777-777777777777
+    -> subscribed to notifications
+[SERVICE] 0000079a-d102-11e1-9b23-00025b00a5a5
+  [CHAR] 0100079a-d102-11e1-9b23-00025b00a5a5
+    -> CMD char found
+  [CHAR] 0200079a-d102-11e1-9b23-00025b00a5a5
+    -> NOTIFY char found
+    -> subscribed to notifications
+[SERVICE] 0000079c-d102-11e1-9b23-00025b00a5a5
+  [CHAR] 0100079c-d102-11e1-9b23-00025b00a5a5
