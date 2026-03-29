@@ -147,3 +147,84 @@ func handleNotify(data []byte) {
         i += int(data[i+1]) + 3 
     }
 }
+
+func handleGesture(side string, gesture byte) {
+	switch {
+	case side == "LEFT" && gesture == 0x02:
+		run("xdotool", "click", "1")
+		fmt.Println("[ACTION] Left mouse click")
+
+	case side == "RIGHT" && gesture == 0x02:
+		run("xdotool", "click", "3")
+		fmt.Println("[ACTION] Right mouse click")
+
+	case side == "LEFT" && gesture == 0x03:
+		run("xdotool", "click", "--repeat", "5", "--delay", "20", "4")
+		fmt.Println("[ACTION] Scroll up ×5")
+
+	case side == "RIGHT" && gesture == 0x03:
+		run("xdotool", "click", "--repeat", "5", "--delay", "20", "5")
+		fmt.Println("[ACTION] Scroll down ×5")
+
+	case side == "LEFT" && gesture == 0x04:
+		run("xdotool", "key", "XF86AudioPlay")
+		fmt.Println("[ACTION] Play / Pause")
+
+	case side == "RIGHT" && gesture == 0x04:
+		run("xdotool", "key", "XF86AudioNext")
+		fmt.Println("[ACTION] Next track")
+	}
+}
+
+func run(name string, args ...string) {
+	_ = exec.Command(name, args...).Run()
+}
+
+
+func readLoop(fd int) {
+	buf := make([]byte, 1024)
+	for {
+		n, err := syscall.Read(fd, buf)
+		if err != nil {
+			fmt.Println("\n[ERROR] Read:", err)
+			return
+		}
+		if n > 0 {
+			handleNotify(buf[:n])
+		}
+	}
+}
+
+
+func cmdANC(fd int, mode byte, label string) {
+	doHandshake(fd)
+	sendRaw(fd, []byte{
+		0xAA, 0x0A, 0x00, 0x00, 0x04, 0x04,
+		0x42, 0x03, 0x00, 0x01, 0x01, mode,
+	}, label)
+	time.Sleep(2 * time.Second)
+}
+
+func cmdBattery(fd int) {
+	doHandshake(fd)
+	sendRaw(fd, []byte{
+		0xAA, 0x07, 0x00, 0x00, 0x06, 0x01, 0x25, 0x00, 0x00,
+	}, "BATTERY QUERY")
+	time.Sleep(3 * time.Second)
+}
+
+
+func cmdConnect() {
+	fmt.Printf("[*] Linking %s... ", DEVICE_MAC)
+	exec.Command("bluetoothctl", "connect", DEVICE_MAC).Run()
+
+	fmt.Println("\n[OK] Device Connected")
+}
+
+func cmdDisconnect() {
+	fmt.Printf("[*] Dropping %s... ", DEVICE_MAC)
+	exec.Command("bluetoothctl", "disconnect", DEVICE_MAC).Run()
+	fmt.Println("\n[OK] Device disconnected")
+}
+
+
