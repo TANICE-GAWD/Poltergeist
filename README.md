@@ -28,7 +28,25 @@ what i have tried till now :
 21. so simply putting it disconnects me first from bluetooth and then it works and connects back
 22. shifted to python and used "Bleak" library instead....wroking perfectly
 23. but using python made not be single binary and is wayyyyyy slower
+24. came to a compromise
+25. chose GO lang instead of python
+26. now the script
+27. disconnects audio >> connect BLE >> send command >> reconnect audio
+28. found that the following channels supported notif
+29. fe2c1234
+fe2c1235
+fe2c1237
+fe2c123a
+77777777
+0200079a
 
+30. data contains aa:07:00:00 || data contains aa:0c:00:00 || data contains aa:0a:00:00 filterrrrrrrrrrrrrr
+31. had to distch everything cause i got to know that i was wrong to begn with
+32. OnePlus was not using BLE, GATT...they were using RFCOMM for gestures
+33. found the channel = 12
+34. Rest was easy as all i had to do was to write the script in go
+35. used xdotool for linux remote intervention
+36. it finally worked...yayyyyyyyyyyyyyyyyyy
 
 
 
