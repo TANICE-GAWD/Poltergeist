@@ -1,9 +1,32 @@
 # Poltergeist
-[![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/TANICE-GAWD/Poltergeist)
 
 Poltergeist is a evil spirit from German Folk lore in which it had invisible hands and it used it to control/destroy objects
 
 Poltergeist is a specialized Linux utility designed to repurpose the touch-sensitive surfaces of OnePlus earbuds (specifically Nord Buds 3) as a remote control for a Linux desktop. By intercepting raw Bluetooth RFCOMM packets, the system translates physical earbud gestures—such as double taps, triple taps, and long presses—into desktop actions via xdotool.
+
+## Command List :
+1. listen
+The primary mode for Poltergeist. It performs the protocol handshake and then enters an infinite wait state, monitoring for gesture packets.
+Behavior: Calls doHandshake()
+          which sends the HELLO and REGISTER packets.
+          It then relies on readLoop 
+          to capture and handle notifications.
+Expected Output:
+[*] Performing handshake...
+[TX] HELLO: aa070000000123000012
+[TX] REGISTER: aa0c0000008541050000b550a069
+[*] Waiting for gestures... (Press Ctrl+C to stop)
+Error Hint: If the output hangs at Connecting..., ensure the earbuds are not currently paired to another device or in a deep sleep state.
+
+
+
+## Connection and Handshake Flow :
+<img width="960" height="380" alt="image" src="https://github.com/user-attachments/assets/82e1c3e1-6bb6-4d1e-8dfd-8f8789c4074d" />
+
+## Gesture to Desktop Action Pipeline
+<img width="674" height="159" alt="image" src="https://github.com/user-attachments/assets/32484fa3-e4a6-4c87-82d1-0bda1e5a41b3" />
+
+
 
 
 
